@@ -1,3 +1,5 @@
+@import './travel.css';
+
 body {
   margin: 0;
   font-family: var(--font-family-sans);
