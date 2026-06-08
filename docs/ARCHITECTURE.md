@@ -15,15 +15,19 @@ The logic lives in a pure TypeScript engine, totally decoupled from React compon
 
 React is strictly a view layer. It calls the engine for scoring and ranking.
 
-## Planned Modules
+## Domain Modules Implemented
 
-- `travelCalculator`
-- `foodCalculator`
-- `energyCalculator`
-- `rankAlternatives`
-- `score`
-- `horizonProjector`
-- `analogyMapper`
+- `src/domain/types.ts`: Core data structures and types.
+- `src/domain/engine/score.ts`: Transparent scoring algorithm.
+- `src/domain/engine/rankAlternatives.ts`: Deterministic ranking and filtering logic.
+- `src/domain/engine/horizonProjector.ts`: Projects 10-year impact of decisions.
+- `src/domain/engine/analogyMapper.ts`: Converts CO2e into relatable equivalents.
+- `src/domain/engine/buildExplanation.ts`: Constructs the explanation payloads.
+- `src/domain/travel/travelCalculator.ts`: Core travel decision evaluation logic.
+- `src/domain/travel/travelAlternatives.ts`: Determines candidate modes.
+- `src/domain/travel/travelTypes.ts`: Specific types for the travel domain.
+- `src/domain/factors/emissionFactors.ts`: Static numerical factors.
+- `src/domain/factors/assumptionCatalog.ts`: Catalog of transparent assumptions.
 
 ## Validation and Storage Boundaries
 
