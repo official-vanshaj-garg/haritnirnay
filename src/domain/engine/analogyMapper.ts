@@ -16,6 +16,7 @@ export function generateAnalogies(kgCO2e: number): Analogy[] {
     equivalentValue: kgCO2e / ASSUMPTIONS.petrol_car_emissions.value,
     unit: 'km',
     assumption: ASSUMPTIONS.petrol_car_emissions,
+    provenance: ASSUMPTIONS.petrol_car_emissions.provenance,
   });
 
   // Smartphone charges
@@ -25,6 +26,7 @@ export function generateAnalogies(kgCO2e: number): Analogy[] {
     equivalentValue: kgCO2e / ASSUMPTIONS.smartphone_charge.value,
     unit: 'charges',
     assumption: ASSUMPTIONS.smartphone_charge,
+    provenance: ASSUMPTIONS.smartphone_charge.provenance,
   });
 
   // Tree years
@@ -34,6 +36,7 @@ export function generateAnalogies(kgCO2e: number): Analogy[] {
     equivalentValue: kgCO2e / ASSUMPTIONS.tree_absorption_year.value,
     unit: 'years',
     assumption: ASSUMPTIONS.tree_absorption_year,
+    provenance: ASSUMPTIONS.tree_absorption_year.provenance,
   });
 
   return analogies;

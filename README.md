@@ -30,6 +30,14 @@ Urban Indian students/professionals making everyday lifestyle decisions.
 - Real-world carbon accounting (too complex, unnecessary for behavioral nudge).
 - Backend, auth, API calls (security, performance, complexity).
 
+## Sources & limitations
+
+Travel emission factors and analogies are documented in
+[docs/SOURCES.md](docs/SOURCES.md). Confidence labels mean: High is suitable for
+well-sourced public reference data, Medium is plausible but needs more context,
+and Low is an internal estimate or unverified source. Current Travel values are
+Low confidence and should not be treated as billable carbon accounting.
+
 ## Tech Stack
 
 - React

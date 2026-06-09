@@ -1,3 +1,5 @@
+import { Provenance } from './provenance';
+
 export type FeasibilityScore = number; // 0 to 1
 export type ContextMatchScore = number; // 0 to 1
 export type FrictionPenalty = number; // 0+
@@ -7,9 +9,9 @@ export interface Assumption {
   label: string;
   value: number;
   unit: string;
-  sourceLabel: string;
   sourceNote: string;
   limitation: string;
+  provenance: Provenance;
 }
 
 export interface Recommendation {
@@ -38,6 +40,7 @@ export interface Analogy {
   equivalentValue: number;
   unit: string;
   assumption: Assumption;
+  provenance: Provenance;
 }
 
 export interface HorizonProjection {

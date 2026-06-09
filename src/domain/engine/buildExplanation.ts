@@ -1,4 +1,5 @@
 import { Recommendation, Assumption } from '../types';
+import { formatApproxKgCO2e } from '../formatting/carbonFormat';
 
 export function buildExplanation(
   id: string,
@@ -12,7 +13,7 @@ export function buildExplanation(
   score: number,
   assumptions: Assumption[]
 ): Recommendation {
-  let reason = `This option saves ${savedKg.toFixed(2)} kg CO2e.`;
+  let reason = `This option saves ${formatApproxKgCO2e(savedKg)}.`;
   if (frictionPenalty > 0) {
     reason += ` However, it comes with a friction penalty of ${frictionPenalty}.`;
   }

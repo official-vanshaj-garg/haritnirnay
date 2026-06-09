@@ -1,4 +1,5 @@
 import { Recommendation } from '../../domain/types';
+import { formatApproxNumber } from '../../domain/formatting/carbonFormat';
 
 interface Props {
   breakdown: Recommendation['scoreBreakdown'];
@@ -13,8 +14,8 @@ export function ScoreBreakdown({ breakdown }: Props) {
         Penalty
       </p>
       <code>
-        ({breakdown.savedKg.toFixed(2)} &times; {breakdown.feasibility} &times;{' '}
-        {breakdown.contextMatch}) - {breakdown.frictionPenalty}
+        ({formatApproxNumber(breakdown.savedKg)} &times; {breakdown.feasibility}{' '}
+        &times; {breakdown.contextMatch}) - {breakdown.frictionPenalty}
       </code>
     </div>
   );

@@ -1,4 +1,5 @@
 import { HorizonProjection } from '../../domain/types';
+import { formatApproxKgCO2e } from '../../domain/formatting/carbonFormat';
 import { AnalogyList } from './AnalogyList';
 
 interface Props {
@@ -15,7 +16,7 @@ export function HorizonCard({ horizon, frequencyLabel }: Props) {
       </p>
       <div className="horizon-impact">
         <span className="big-number">
-          {horizon.totalSavedKg.toFixed(0)} kg CO2e
+          {formatApproxKgCO2e(horizon.totalSavedKg)}
         </span>{' '}
         saved over 10 years
       </div>

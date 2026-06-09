@@ -1,4 +1,5 @@
 import { Analogy } from '../../domain/types';
+import { formatApproxNumber } from '../../domain/formatting/carbonFormat';
 
 interface Props {
   analogies: Analogy[];
@@ -9,11 +10,13 @@ export function AnalogyList({ analogies }: Props) {
 
   return (
     <div className="analogy-list">
-      <h4>Relatable Impact</h4>
+      <h4>Scale References</h4>
+      <p className="analogy-note">Analogies are references, not offsets.</p>
       <ul>
         {analogies.map((a) => (
           <li key={a.id}>
-            <strong>{a.equivalentValue.toFixed(1)}</strong> {a.unit} ({a.label})
+            <strong>{formatApproxNumber(a.equivalentValue)}</strong> {a.unit} (
+            {a.label})
           </li>
         ))}
       </ul>

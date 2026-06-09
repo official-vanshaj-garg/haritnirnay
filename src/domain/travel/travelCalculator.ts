@@ -14,10 +14,10 @@ function getEmissions(
 ): number {
   if (mode === 'petrol_car') {
     // Car emissions are per vehicle, usually divided by passengers
-    return (EMISSION_FACTORS.travel[mode] * distanceKm) / passengers;
+    return (EMISSION_FACTORS.travel[mode].value * distanceKm) / passengers;
   }
   // Public transport emissions are per passenger
-  return EMISSION_FACTORS.travel[mode] * distanceKm;
+  return EMISSION_FACTORS.travel[mode].value * distanceKm;
 }
 
 function getFeasibility(mode: TravelMode, input: TravelInput): number {
