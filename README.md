@@ -40,7 +40,6 @@ Current validation status:
 - **Reduced-motion-safe UI** with visible focus states.
 - **Security posture**: HaritNirnay runs fully client-side with no backend, no storage, no external APIs, npm audit checks, and CodeQL security analysis through GitHub Actions.
 
-
 ## Tech Stack
 
 - React + Vite
