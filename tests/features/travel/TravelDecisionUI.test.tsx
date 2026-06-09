@@ -134,13 +134,18 @@ describe('TravelDecisionUI', () => {
     });
 
     expect(within(receipt).getByText(/^Current choice$/i)).toBeInTheDocument();
-    expect(within(receipt).getByText(/^Petrol Car$/i)).toBeInTheDocument();
+    expect(
+      within(receipt).getAllByText(/^Petrol Car$/i)[0]
+    ).toBeInTheDocument();
     expect(
       within(receipt).getAllByText(/Recommended choice/i)[0]
     ).toBeInTheDocument();
-    expect(within(receipt).getByText(/^Local Bus$/i)).toBeInTheDocument();
+    expect(within(receipt).getAllByText(/^Local Bus$/i)[0]).toBeInTheDocument();
     expect(
       within(receipt).getAllByText(/about 1.7 kg CO2e/i)[0]
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getAllByText(/about 900 kg CO2e/i)[0]
     ).toBeInTheDocument();
     expect(within(receipt).getByText(/^Confidence$/i)).toBeInTheDocument();
     expect(within(receipt).getByText(/^Low$/i)).toBeInTheDocument();
@@ -168,13 +173,16 @@ describe('TravelDecisionUI', () => {
       })
     ).toBeInTheDocument();
     expect(
-      within(receipt).getByText(/Current choice impact/i)
+      within(receipt).getByText(/Current choice carbon/i)
     ).toBeInTheDocument();
     expect(
-      within(receipt).getByText(/Recommended choice impact/i)
+      within(receipt).getByText(/Recommended choice carbon/i)
     ).toBeInTheDocument();
     expect(
-      within(receipt).getByText(/Approximate carbon cut/i)
+      within(receipt).getByText(/Carbon avoided today/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/Carbon avoided over 10 years/i)
     ).toBeInTheDocument();
     expect(within(receipt).getByText(/about 3.8 kg CO2e/i)).toBeInTheDocument();
     expect(within(receipt).getByText(/about 2.1 kg CO2e/i)).toBeInTheDocument();
@@ -183,8 +191,44 @@ describe('TravelDecisionUI', () => {
     ).toBeInTheDocument();
     expect(
       within(receipt).getByText(
-        /Low confidence internal estimate; useful for comparison, not accounting/i
+        /Comparison estimate only. Not carbon accounting/i
       )
+    ).toBeInTheDocument();
+  });
+
+  it('renders the receipt trust strip and 10-year fork', async () => {
+    render(<TravelDecisionPage />);
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /Compare my petrol car choice/i })
+    );
+
+    const receipt = await screen.findByRole('article', {
+      name: /Carbon receipt/i,
+    });
+
+    expect(within(receipt).getByText(/Local-only/i)).toBeInTheDocument();
+    expect(within(receipt).getByText(/No tracking/i)).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/Static assumptions/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/Useful for comparison/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByRole('heading', { name: /10-Year Fork/i })
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/Keep current choice/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/Switch to recommendation/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/about 2,000 kg CO2e/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/about 1,100 kg CO2e/i)
     ).toBeInTheDocument();
   });
 
@@ -204,14 +248,22 @@ describe('TravelDecisionUI', () => {
 
     expect(
       within(receipt).getByText(
-        /Train is already near the lower-impact recommendation/i
+        /You are already near the lower-impact recommendation/i
       )
     ).toBeInTheDocument();
     expect(
-      within(receipt).getByText(/No positive cut identified/i)
+      within(receipt).getByText(/No positive avoided carbon identified/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(
+        /No positive 10-year avoided carbon identified/i
+      )
     ).toBeInTheDocument();
     expect(
       within(receipt).getAllByText(/about 0.82 kg CO2e/i)[0]
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getAllByText(/about 430 kg CO2e/i)[0]
     ).toBeInTheDocument();
   });
 

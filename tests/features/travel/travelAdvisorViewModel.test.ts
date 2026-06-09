@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   CARBON_CUT_TRUST_NOTE,
+  RECEIPT_TRUST_STRIP,
   buildGhostAlternativePreview,
   buildTravelCtaLabel,
   DEFAULT_TRAVEL_FORM_DRAFT,
@@ -70,10 +71,26 @@ describe('travelAdvisorViewModel', () => {
     const receipt = generateTravelViewModel(parsedDraft.data).receipt;
 
     expect(receipt.carbonCut.status).toBe('cut');
+    expect(receipt.carbonCut.currentImpactLabel).toBe('Current choice carbon');
     expect(receipt.carbonCut.currentImpactValue).toBe('about 3.8 kg CO2e');
+    expect(receipt.carbonCut.recommendedImpactLabel).toBe(
+      'Recommended choice carbon'
+    );
     expect(receipt.carbonCut.recommendedImpactValue).toBe('about 2.1 kg CO2e');
-    expect(receipt.carbonCut.cutValue).toBe('about 1.7 kg CO2e');
+    expect(receipt.carbonCut.avoidedTodayLabel).toBe('Carbon avoided today');
+    expect(receipt.carbonCut.avoidedTodayValue).toBe('about 1.7 kg CO2e');
+    expect(receipt.carbonCut.avoidedTenYearLabel).toBe(
+      'Carbon avoided over 10 years'
+    );
+    expect(receipt.carbonCut.avoidedTenYearValue).toBe('about 900 kg CO2e');
+    expect(receipt.carbonCut.fork.currentPath.impactValue).toBe(
+      'about 2,000 kg CO2e'
+    );
+    expect(receipt.carbonCut.fork.recommendedPath.impactValue).toBe(
+      'about 1,100 kg CO2e'
+    );
     expect(receipt.carbonCut.trustNote).toBe(CARBON_CUT_TRUST_NOTE);
+    expect(receipt.trustStripItems).toEqual(RECEIPT_TRUST_STRIP);
   });
 
   it('builds honest carbon cut data when no positive cut is available', () => {
@@ -89,10 +106,21 @@ describe('travelAdvisorViewModel', () => {
 
     expect(receipt.carbonCut.status).toBe('already_recommended');
     expect(receipt.carbonCut.summary).toMatch(
-      /Train is already near the lower-impact recommendation/i
+      /You are already near the lower-impact recommendation/i
     );
     expect(receipt.carbonCut.currentImpactValue).toBe('about 0.82 kg CO2e');
     expect(receipt.carbonCut.recommendedImpactValue).toBe('about 0.82 kg CO2e');
-    expect(receipt.carbonCut.cutValue).toBe('No positive cut identified');
+    expect(receipt.carbonCut.avoidedTodayValue).toBe(
+      'No positive avoided carbon identified'
+    );
+    expect(receipt.carbonCut.avoidedTenYearValue).toBe(
+      'No positive 10-year avoided carbon identified'
+    );
+    expect(receipt.carbonCut.fork.currentPath.impactValue).toBe(
+      'about 430 kg CO2e'
+    );
+    expect(receipt.carbonCut.fork.recommendedPath.impactValue).toBe(
+      'about 430 kg CO2e'
+    );
   });
 });

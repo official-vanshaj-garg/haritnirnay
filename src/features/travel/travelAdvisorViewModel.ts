@@ -17,7 +17,14 @@ export const CARBON_ACCOUNTING_DISCLAIMER =
   'Order-of-magnitude estimates, not billable carbon accounting.';
 
 export const CARBON_CUT_TRUST_NOTE =
-  'Low confidence internal estimate; useful for comparison, not accounting.';
+  'Comparison estimate only. Not carbon accounting.';
+
+export const RECEIPT_TRUST_STRIP = [
+  'Local-only',
+  'No tracking',
+  'Static assumptions',
+  'Useful for comparison',
+];
 
 export interface TravelFormDraft {
   distanceKm: string;
@@ -61,6 +68,7 @@ export interface CarbonReceiptViewModel {
   confidenceLabel: string;
   disclaimer: string;
   carbonCut: CarbonCutViewModel;
+  trustStripItems: string[];
 }
 
 export interface CarbonCutViewModel {
@@ -70,9 +78,26 @@ export interface CarbonCutViewModel {
   currentImpactValue: string;
   recommendedImpactLabel: string;
   recommendedImpactValue: string;
-  cutLabel: string;
-  cutValue: string;
+  avoidedTodayLabel: string;
+  avoidedTodayValue: string;
+  avoidedTenYearLabel: string;
+  avoidedTenYearValue: string;
   trustNote: string;
+  fork: TenYearForkViewModel;
+}
+
+export interface TenYearForkViewModel {
+  title: string;
+  note: string;
+  currentPath: DecisionForkPathViewModel;
+  recommendedPath: DecisionForkPathViewModel;
+}
+
+export interface DecisionForkPathViewModel {
+  pathLabel: string;
+  choiceLabel: string;
+  impactLabel: string;
+  impactValue: string;
 }
 
 const travelModeSchema = z.enum(['petrol_car', 'bus', 'train', 'short_flight']);
@@ -188,9 +213,9 @@ export function buildCarbonReceiptViewModel(
     input.distanceKm,
     input.passengers
   );
+  const currentTenYearImpact = projectImpact(currentImpactKg, 'weekly');
 
   if (!recommended) {
-    const horizon = projectImpact(currentImpactKg, 'weekly');
     const confidence = getLowestConfidence([
       getTravelModeAssumption(input.selectedMode),
     ]);
@@ -201,20 +226,39 @@ export function buildCarbonReceiptViewModel(
       todayLabel: "Today's estimated impact",
       todayValue: formatApproxKgCO2e(currentImpactKg),
       horizonLabel: '10-year weekly-repeat impact',
-      horizonValue: formatApproxKgCO2e(horizon.totalSavedKg),
+      horizonValue: formatApproxKgCO2e(currentTenYearImpact.totalSavedKg),
       confidenceLabel: CONFIDENCE_LABELS[confidence],
       disclaimer: CARBON_ACCOUNTING_DISCLAIMER,
       carbonCut: {
         status: 'already_recommended',
-        summary: `${currentChoiceLabel} is already near the lower-impact recommendation for this trip.`,
-        currentImpactLabel: 'Current choice impact',
+        summary: 'You are already near the lower-impact recommendation.',
+        currentImpactLabel: 'Current choice carbon',
         currentImpactValue: formatApproxKgCO2e(currentImpactKg),
-        recommendedImpactLabel: 'Recommended choice impact',
+        recommendedImpactLabel: 'Recommended choice carbon',
         recommendedImpactValue: formatApproxKgCO2e(currentImpactKg),
-        cutLabel: 'Approximate carbon cut',
-        cutValue: 'No positive cut identified',
+        avoidedTodayLabel: 'Carbon avoided today',
+        avoidedTodayValue: 'No positive avoided carbon identified',
+        avoidedTenYearLabel: 'Carbon avoided over 10 years',
+        avoidedTenYearValue: 'No positive 10-year avoided carbon identified',
         trustNote: CARBON_CUT_TRUST_NOTE,
+        fork: {
+          title: '10-Year Fork',
+          note: 'Weekly-repeat estimate using the same 10-year horizon assumption.',
+          currentPath: {
+            pathLabel: 'Keep current choice',
+            choiceLabel: currentChoiceLabel,
+            impactLabel: '10-year weekly impact',
+            impactValue: formatApproxKgCO2e(currentTenYearImpact.totalSavedKg),
+          },
+          recommendedPath: {
+            pathLabel: 'Switch to recommendation',
+            choiceLabel: currentChoiceLabel,
+            impactLabel: '10-year weekly impact',
+            impactValue: formatApproxKgCO2e(currentTenYearImpact.totalSavedKg),
+          },
+        },
       },
+      trustStripItems: RECEIPT_TRUST_STRIP,
     };
   }
 
@@ -222,6 +266,7 @@ export function buildCarbonReceiptViewModel(
     getTravelModeAssumption(input.selectedMode),
     ...recommended.assumptions,
   ]);
+  const recommendedTenYearImpact = projectImpact(recommended.co2eKg, 'weekly');
 
   return {
     currentChoiceLabel,
@@ -234,14 +279,35 @@ export function buildCarbonReceiptViewModel(
     disclaimer: CARBON_ACCOUNTING_DISCLAIMER,
     carbonCut: {
       status: 'cut',
-      summary: `Before you choose ${currentChoiceLabel}, ${recommended.label} cuts this trip by ${formatApproxKgCO2e(recommended.savedKg)}.`,
-      currentImpactLabel: 'Current choice impact',
+      summary: `Before you choose ${currentChoiceLabel}, switching to ${recommended.label} avoids ${formatApproxKgCO2e(recommended.savedKg)} today.`,
+      currentImpactLabel: 'Current choice carbon',
       currentImpactValue: formatApproxKgCO2e(currentImpactKg),
-      recommendedImpactLabel: 'Recommended choice impact',
+      recommendedImpactLabel: 'Recommended choice carbon',
       recommendedImpactValue: formatApproxKgCO2e(recommended.co2eKg),
-      cutLabel: 'Approximate carbon cut',
-      cutValue: formatApproxKgCO2e(recommended.savedKg),
+      avoidedTodayLabel: 'Carbon avoided today',
+      avoidedTodayValue: formatApproxKgCO2e(recommended.savedKg),
+      avoidedTenYearLabel: 'Carbon avoided over 10 years',
+      avoidedTenYearValue: formatApproxKgCO2e(recommended.horizon.totalSavedKg),
       trustNote: CARBON_CUT_TRUST_NOTE,
+      fork: {
+        title: '10-Year Fork',
+        note: 'Weekly-repeat estimate using the same 10-year horizon assumption.',
+        currentPath: {
+          pathLabel: 'Keep current choice',
+          choiceLabel: currentChoiceLabel,
+          impactLabel: '10-year weekly impact',
+          impactValue: formatApproxKgCO2e(currentTenYearImpact.totalSavedKg),
+        },
+        recommendedPath: {
+          pathLabel: 'Switch to recommendation',
+          choiceLabel: recommended.label,
+          impactLabel: '10-year weekly impact',
+          impactValue: formatApproxKgCO2e(
+            recommendedTenYearImpact.totalSavedKg
+          ),
+        },
+      },
     },
+    trustStripItems: RECEIPT_TRUST_STRIP,
   };
 }
