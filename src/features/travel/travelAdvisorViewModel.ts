@@ -123,7 +123,10 @@ const travelModeAssumptionIds: Record<TravelMode, string> = {
 };
 
 function parseNumericDraftValue(value: string): number | undefined {
-  return value.trim() === '' ? undefined : Number(value);
+  if (value.trim() === '') return undefined;
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed)) return undefined;
+  return parsed;
 }
 
 export function getTravelModeAssumption(mode: TravelMode): Assumption {

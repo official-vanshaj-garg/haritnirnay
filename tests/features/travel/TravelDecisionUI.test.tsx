@@ -67,14 +67,14 @@ describe('TravelDecisionUI', () => {
   it('validates invalid inputs', async () => {
     render(<TravelDecisionPage />);
     const distanceInput = screen.getByLabelText(/Distance \(km\)/i);
-    fireEvent.change(distanceInput, { target: { value: '-10' } });
+    fireEvent.change(distanceInput, { target: { value: '' } });
     fireEvent.click(
       screen.getByRole('button', { name: /Compare my petrol car choice/i })
     );
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Distance must be greater than 0/i)
+        screen.getByText(/Distance is required/i)
       ).toBeInTheDocument();
     });
   });

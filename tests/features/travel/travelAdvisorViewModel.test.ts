@@ -123,4 +123,54 @@ describe('travelAdvisorViewModel', () => {
       'about 430 kg CO2e'
     );
   });
+
+  describe('generateTravelViewModel defense-in-depth', () => {
+    it('rejects huge passenger numbers', () => {
+      expect(() => {
+        generateTravelViewModel({
+          distanceKm: 10,
+          passengers: 100, // max is 50
+          selectedMode: 'petrol_car',
+          priority: 'balanced',
+          region: 'india',
+        });
+      }).toThrow(/Max 50 passengers/i);
+    });
+
+    it('rejects huge distance numbers', () => {
+      expect(() => {
+        generateTravelViewModel({
+          distanceKm: 10000, // max is 5000
+          passengers: 2,
+          selectedMode: 'petrol_car',
+          priority: 'balanced',
+          region: 'india',
+        });
+      }).toThrow(/realistic for everyday travel/i);
+    });
+
+    it('rejects zero or negative passengers', () => {
+      expect(() => {
+        generateTravelViewModel({
+          distanceKm: 10,
+          passengers: 0,
+          selectedMode: 'petrol_car',
+          priority: 'balanced',
+          region: 'india',
+        });
+      }).toThrow(/at least 1 passenger/i);
+    });
+
+    it('rejects non-finite values safely', () => {
+      expect(() => {
+        generateTravelViewModel({
+          distanceKm: Infinity,
+          passengers: 2,
+          selectedMode: 'petrol_car',
+          priority: 'balanced',
+          region: 'india',
+        });
+      }).toThrow();
+    });
+  });
 });

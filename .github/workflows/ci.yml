@@ -34,4 +34,8 @@ jobs:
           sleep $((attempt * 15))
         done
         npm ci
-    - run: npm run validate
+    - name: Run audit
+      run: npm audit --omit=dev
+
+    - name: Run validation
+      run: npm run validate

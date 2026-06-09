@@ -12,6 +12,13 @@ export function calculateTravelModeEmissions(
   distanceKm: number,
   passengers: number
 ): number {
+  if (!Number.isFinite(distanceKm) || distanceKm <= 0) {
+    throw new RangeError('Distance must be finite and > 0');
+  }
+  if (!Number.isFinite(passengers) || passengers < 1) {
+    throw new RangeError('Passengers must be finite and >= 1');
+  }
+
   if (mode === 'petrol_car') {
     // Car emissions are per vehicle, usually divided by passengers
     return (EMISSION_FACTORS.travel[mode].value * distanceKm) / passengers;
@@ -71,19 +78,21 @@ export function evaluateTravelDecision(input: TravelInput): {
   if (
     input.distanceKm <= 0 ||
     isNaN(input.distanceKm) ||
-    !isFinite(input.distanceKm)
+    !isFinite(input.distanceKm) ||
+    input.distanceKm > 5000
   ) {
     throw new RangeError(
-      'Validation failure: Distance must be a finite positive number.'
+      'Validation failure: Distance must be a finite positive number <= 5000.'
     );
   }
   if (
     input.passengers < 1 ||
     isNaN(input.passengers) ||
-    !isFinite(input.passengers)
+    !isFinite(input.passengers) ||
+    input.passengers > 50
   ) {
     throw new RangeError(
-      'Validation failure: Passengers must be a finite positive number.'
+      'Validation failure: Passengers must be a finite positive number <= 50.'
     );
   }
 

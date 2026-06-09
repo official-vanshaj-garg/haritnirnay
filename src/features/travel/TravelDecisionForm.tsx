@@ -49,6 +49,9 @@ export function TravelDecisionForm({ onSubmit }: Props) {
         <input
           id="distanceKm"
           type="number"
+          min="1"
+          max="5000"
+          step="0.1"
           value={rawForm.distanceKm}
           onChange={(e) =>
             setRawForm({ ...rawForm, distanceKm: e.target.value })
@@ -66,6 +69,9 @@ export function TravelDecisionForm({ onSubmit }: Props) {
         <input
           id="passengers"
           type="number"
+          min="1"
+          max="50"
+          step="1"
           value={rawForm.passengers}
           onChange={(e) =>
             setRawForm({ ...rawForm, passengers: e.target.value })

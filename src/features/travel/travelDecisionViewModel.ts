@@ -12,6 +12,8 @@ import {
   getTravelModeAssumption,
 } from './travelAdvisorViewModel';
 
+import { travelFormSchema } from './travelFormSchema';
+
 export interface UIRecommendation extends Recommendation {
   horizon: HorizonProjection;
 }
@@ -25,7 +27,8 @@ export interface TravelDecisionResult {
 export function generateTravelViewModel(
   input: TravelFormInput
 ): TravelDecisionResult {
-  const { alternatives } = evaluateTravelDecision(input);
+  const validated = travelFormSchema.parse(input);
+  const { alternatives } = evaluateTravelDecision(validated);
 
   const uiAlternatives = alternatives.map((alt) => {
     // UI assumes this decision repeats weekly to provide the horizon
