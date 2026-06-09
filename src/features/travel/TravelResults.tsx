@@ -2,6 +2,7 @@ import { TravelDecisionResult } from './travelDecisionViewModel';
 import { ScoreBreakdown } from './ScoreBreakdown';
 import { HorizonCard } from './HorizonCard';
 import { AssumptionPanel } from './AssumptionPanel';
+import { CarbonReceipt } from './CarbonReceipt';
 
 interface Props {
   result: TravelDecisionResult;
@@ -10,14 +11,21 @@ interface Props {
 export function TravelResults({ result }: Props) {
   if (result.alternatives.length === 0) {
     return (
-      <div className="no-results" role="alert">
-        No viable lower-carbon alternatives found for this input.
+      <div className="travel-results">
+        <CarbonReceipt receipt={result.receipt} />
+        <div className="no-results" role="status">
+          This choice already looks like the lower-carbon practical option in
+          the current Travel flow. You can still review the assumptions below.
+        </div>
+        <AssumptionPanel assumptions={result.allAssumptions} />
       </div>
     );
   }
 
   return (
     <div className="travel-results">
+      <CarbonReceipt receipt={result.receipt} />
+
       <h2>Ranked Alternatives</h2>
 
       <div className="alternatives-list">
@@ -28,7 +36,9 @@ export function TravelResults({ result }: Props) {
           >
             <div className="alt-header">
               <h3>
-                #{index + 1}: {alt.label}
+                {index === 0
+                  ? `Recommended choice: ${alt.label}`
+                  : `Also compare: ${alt.label}`}
               </h3>
               <span className="alt-score">Score: {alt.score.toFixed(1)}</span>
             </div>

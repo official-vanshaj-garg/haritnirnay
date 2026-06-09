@@ -6,6 +6,11 @@ import {
   Assumption,
   HorizonProjection,
 } from '../../domain/types';
+import {
+  buildCarbonReceiptViewModel,
+  CarbonReceiptViewModel,
+  getTravelModeAssumption,
+} from './travelAdvisorViewModel';
 
 export interface UIRecommendation extends Recommendation {
   horizon: HorizonProjection;
@@ -14,6 +19,7 @@ export interface UIRecommendation extends Recommendation {
 export interface TravelDecisionResult {
   alternatives: UIRecommendation[];
   allAssumptions: Assumption[];
+  receipt: CarbonReceiptViewModel;
 }
 
 export function generateTravelViewModel(
@@ -29,6 +35,8 @@ export function generateTravelViewModel(
 
   // Extract all unique assumptions
   const assumptionsMap = new Map<string, Assumption>();
+  const currentChoiceAssumption = getTravelModeAssumption(input.selectedMode);
+  assumptionsMap.set(currentChoiceAssumption.id, currentChoiceAssumption);
   uiAlternatives.forEach((alt) => {
     alt.assumptions.forEach((a) => assumptionsMap.set(a.id, a));
     alt.horizon.analogies.forEach((analogy) =>
@@ -39,5 +47,6 @@ export function generateTravelViewModel(
   return {
     alternatives: uiAlternatives,
     allAssumptions: Array.from(assumptionsMap.values()),
+    receipt: buildCarbonReceiptViewModel(input, uiAlternatives),
   };
 }

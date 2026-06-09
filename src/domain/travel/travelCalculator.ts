@@ -7,7 +7,7 @@ import { calculateScore } from '../engine/score';
 import { buildExplanation } from '../engine/buildExplanation';
 import { rankAlternatives } from '../engine/rankAlternatives';
 
-function getEmissions(
+export function calculateTravelModeEmissions(
   mode: TravelMode,
   distanceKm: number,
   passengers: number
@@ -52,7 +52,7 @@ function getFriction(mode: TravelMode, input: TravelInput): number {
   return penalty;
 }
 
-function getModeLabel(mode: TravelMode): string {
+export function getTravelModeLabel(mode: TravelMode): string {
   switch (mode) {
     case 'petrol_car':
       return 'Petrol Car';
@@ -87,7 +87,7 @@ export function evaluateTravelDecision(input: TravelInput): {
     );
   }
 
-  const baselineEmissions = getEmissions(
+  const baselineEmissions = calculateTravelModeEmissions(
     input.selectedMode,
     input.distanceKm,
     input.passengers
@@ -95,7 +95,11 @@ export function evaluateTravelDecision(input: TravelInput): {
   const candidates = getCandidateModes(input);
 
   const rawRecommendations = candidates.map((mode) => {
-    const emissions = getEmissions(mode, input.distanceKm, input.passengers);
+    const emissions = calculateTravelModeEmissions(
+      mode,
+      input.distanceKm,
+      input.passengers
+    );
     const savedKg = baselineEmissions - emissions;
 
     const feasibility = getFeasibility(mode, input);
@@ -121,7 +125,7 @@ export function evaluateTravelDecision(input: TravelInput): {
 
     return buildExplanation(
       `travel_${mode}`,
-      getModeLabel(mode),
+      getTravelModeLabel(mode),
       'travel',
       emissions,
       savedKg,

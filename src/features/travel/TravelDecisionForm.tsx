@@ -1,44 +1,39 @@
-import { useState } from 'react';
-import { travelFormSchema } from './travelFormSchema';
+import { useMemo, useState } from 'react';
+import { AdvisorPreview } from './AdvisorPreview';
 import { TravelFormInput } from './travelFormTypes';
+import {
+  buildGhostAlternativePreview,
+  buildTravelCtaLabel,
+  DEFAULT_TRAVEL_FORM_DRAFT,
+  parseTravelFormDraft,
+  TravelFormDraft,
+} from './travelAdvisorViewModel';
 
 interface Props {
   onSubmit: (data: TravelFormInput) => void;
 }
 
 export function TravelDecisionForm({ onSubmit }: Props) {
-  const [rawForm, setRawForm] = useState({
-    distanceKm: '20',
-    passengers: '1',
-    selectedMode: 'petrol_car',
-    region: 'india',
-    priority: 'balanced',
-  });
+  const [rawForm, setRawForm] = useState<TravelFormDraft>(
+    DEFAULT_TRAVEL_FORM_DRAFT
+  );
   const [errors, setErrors] = useState<
     Partial<Record<keyof TravelFormInput, string>>
   >({});
 
+  const parsedDraft = useMemo(() => parseTravelFormDraft(rawForm), [rawForm]);
+  const advisorPreview = parsedDraft.success
+    ? buildGhostAlternativePreview(parsedDraft.data)
+    : null;
+  const ctaLabel = buildTravelCtaLabel(rawForm.selectedMode);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const parsedData = {
-      ...rawForm,
-      distanceKm: rawForm.distanceKm ? Number(rawForm.distanceKm) : undefined,
-      passengers: rawForm.passengers ? Number(rawForm.passengers) : undefined,
-    };
-
-    const result = travelFormSchema.safeParse(parsedData);
+    const result = parseTravelFormDraft(rawForm);
 
     if (!result.success) {
-      const formattedErrors: Partial<Record<keyof TravelFormInput, string>> =
-        {};
-      result.error.errors.forEach((err) => {
-        const pathKey = err.path[0] as keyof TravelFormInput | undefined;
-        if (pathKey) {
-          formattedErrors[pathKey] = err.message;
-        }
-      });
-      setErrors(formattedErrors);
+      setErrors(result.fieldErrors);
     } else {
       setErrors({});
       onSubmit(result.data);
@@ -117,8 +112,10 @@ export function TravelDecisionForm({ onSubmit }: Props) {
         </select>
       </div>
 
+      <AdvisorPreview preview={advisorPreview} />
+
       <button type="submit" className="btn-primary">
-        Evaluate Alternatives
+        {ctaLabel}
       </button>
     </form>
   );

@@ -8,10 +8,10 @@ interface Props {
 export function ScoreBreakdown({ breakdown }: Props) {
   return (
     <div className="score-breakdown">
-      <h4>Score Math</h4>
+      <h4>Show me the math</h4>
       <p>
-        Score = (Saved Kg &times; Feasibility &times; Context Match) - Friction
-        Penalty
+        Score Math: Score = (Saved Kg &times; Feasibility &times; Context Match)
+        - Friction Penalty
       </p>
       <code>
         ({formatApproxNumber(breakdown.savedKg)} &times; {breakdown.feasibility}{' '}
