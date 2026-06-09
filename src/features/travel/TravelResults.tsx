@@ -28,11 +28,13 @@ export function TravelResults({ result }: Props) {
 
       <h2>Ranked Alternatives</h2>
 
-      <div className="alternatives-list">
+      <ul className="ranked-list" aria-label="Alternative options">
         {result.alternatives.map((alt, index) => (
-          <div
+          <li
             key={alt.id}
-            className={`alternative-card ${index === 0 ? 'top-ranked' : ''}`}
+            className={`alternative-card fade-in ${
+              index === 0 ? 'top-ranked' : ''
+            }`}
           >
             <div className="alt-header">
               <h3>
@@ -51,9 +53,9 @@ export function TravelResults({ result }: Props) {
                 frequencyLabel="once per week"
               />
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
 
       <AssumptionPanel assumptions={result.allAssumptions} />
     </div>

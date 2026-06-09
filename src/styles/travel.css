@@ -140,6 +140,18 @@
   font-weight: 600;
 }
 
+.receipt-highlight {
+  background: #e8f5e9;
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm);
+  border-top: none !important;
+}
+
+.receipt-highlight dt,
+.receipt-highlight dd {
+  color: var(--color-primary-dark);
+}
+
 .alternative-card {
   background: var(--color-surface);
   border-radius: var(--radius-md);

@@ -9,7 +9,7 @@ export function AdvisorPreview({ preview }: Props) {
 
   return (
     <div
-      className={`advisor-preview advisor-preview-${preview.kind}`}
+      className={`advisor-preview fade-in advisor-preview-${preview.kind}`}
       role="status"
       aria-live="polite"
       aria-atomic="true"

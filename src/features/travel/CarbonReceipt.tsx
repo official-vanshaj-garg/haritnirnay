@@ -6,7 +6,7 @@ interface Props {
 
 export function CarbonReceipt({ receipt }: Props) {
   return (
-    <article className="carbon-receipt" aria-label="Carbon receipt">
+    <article className="carbon-receipt fade-in" aria-label="Carbon receipt">
       <header className="carbon-receipt-header">
         <p className="receipt-kicker">Carbon receipt</p>
         <h2>Recommended choice</h2>
@@ -17,7 +17,7 @@ export function CarbonReceipt({ receipt }: Props) {
           <dt>Current choice</dt>
           <dd>{receipt.currentChoiceLabel}</dd>
         </div>
-        <div>
+        <div className="receipt-highlight">
           <dt>Recommended choice</dt>
           <dd>{receipt.recommendedChoiceLabel}</dd>
         </div>
