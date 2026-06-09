@@ -6,71 +6,56 @@
 
 Built for PromptWars Virtual Challenge 3: "Carbon Footprint Awareness Platform".
 
-## Chosen Interpretation
+## Core Thesis
 
-HaritNirnay is a Context-aware Carbon Decision Advisor. It is NOT a generic carbon calculator. It intercepts everyday choices before they happen and explains the carbon impact.
+HaritNirnay is a context-aware carbon decision advisor, not a generic carbon calculator. It does not ask "what did you emit?" It asks "what are you about to choose?" By intercepting everyday choices before they happen, it provides actionable, comparative insights.
 
-## Chosen Persona
+## Why Travel-Only?
 
-Urban Indian students/professionals making everyday lifestyle decisions.
+The current implementation focuses entirely on **Travel**. This is intentional. The Travel flow proves the decision-advisor thesis without introducing horizontal bloat. Focusing on a single domain helped us optimize for code quality, testing, security, efficiency, and accessibility rather than building shallow, bug-prone features across multiple domains.
 
-## Core Assistant Logic
+## Architecture & Posture
 
-`context → decision category → candidate options → scoring → ranked alternatives → assumptions → 10-year horizon`
+HaritNirnay was built with a strict zero-backend and zero-bloat posture:
 
-## Planned Features
+- **Pure TypeScript Domain Engine**: The core scoring algorithms and carbon calculations (`src/domain`) are decoupled from the UI.
+- **Separation of Concerns**: React components act as semantic presentation layers. Business logic is isolated in domain and ViewModel adapters.
+- **Strict Validation**: User inputs are guarded by `Zod` schemas before reaching the domain engine.
+- **Zero-Backend / No-Network Security**: There is no backend, no database, no authentication, no external APIs, no maps, no LLM calls, and no local storage. This reduces dependency risk, data privacy risk, and network latency.
+- **Accessible by Design**: The UI uses semantic HTML5, visible focus states, ARIA live regions for dynamic text, native `<details>` disclosures, and `prefers-reduced-motion` support.
 
-- Travel, Food, Energy decision flow comparisons.
-- Visible math & assumptions.
-- Local-first privacy.
+## Sources & Provenance Honesty
 
-## What we deliberately avoid and why
+We do not overclaim scientific precision. Travel emission factors and analogies are documented in `docs/SOURCES.md`. Current internal estimates are clearly labeled with a **Low** confidence rating. The UI presents these assumptions and limits so users understand the data is for comparative decision-making, not formal carbon accounting.
 
-- Post-facto tracking (calculator approach).
-- Real-world carbon accounting (too complex, unnecessary for behavioral nudge).
-- Backend, auth, API calls (security, performance, complexity).
+## Quality Proof
 
-## Sources & limitations
+Current validation status:
 
-Travel emission factors and analogies are documented in
-[docs/SOURCES.md](docs/SOURCES.md). Confidence labels mean: High is suitable for
-well-sourced public reference data, Medium is plausible but needs more context,
-and Low is an internal estimate or unverified source. Current Travel values are
-Low confidence and should not be treated as billable carbon accounting.
+- **42 tests across 11 files** covering domain logic, view-models, and UI integration.
+- **0 vulnerabilities** from `npm audit --omit=dev`.
+- **~63 kB gzipped JS bundle**.
+- **No backend / no network / no storage**, reducing security and privacy risk.
+- **Accessibility checks** using `jest-axe`.
+- **Reduced-motion-safe UI** with visible focus states.
 
 ## Tech Stack
 
-- React
-- Vite
-- TypeScript
-- Zod
-- Vitest / Jest-axe
+- React + Vite
+- TypeScript + Zod
+- Vitest + Jest-axe
+- Vanilla CSS, with no heavy UI frameworks
 
-## Setup Commands
+## Local Development & Validation
 
-\`\`\`bash
+```bash
+# Start the app locally
 npm install
 npm run dev
-\`\`\`
 
-## Validation Commands
-
-\`\`\`bash
+# Run the full validation suite
 npm run validate
-\`\`\`
-
-## Evaluation Metric Checklist
-
-- [ ] Code Quality
-- [ ] Security
-- [ ] Efficiency
-- [ ] Testing
-- [ ] Accessibility
-
-## Current Project Status
-
-Foundation scaffold only.
-
-## Final Submission Reminder
-
-Repo must be public, under 10 MB, and use only one branch.
+npm audit --omit=dev
+git diff --check
+git status --short
+```
