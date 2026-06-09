@@ -32,7 +32,7 @@ We do not overclaim scientific precision. Travel emission factors and analogies 
 
 Current validation status:
 
-- **42 tests across 11 files** covering domain logic, view-models, and UI integration.
+- **47 tests across 11 files** covering domain logic, view-models, and UI integration.
 - **0 vulnerabilities** from `npm audit --omit=dev`.
 - **~63 kB gzipped JS bundle**.
 - **No backend / no network / no storage**, reducing security and privacy risk.
