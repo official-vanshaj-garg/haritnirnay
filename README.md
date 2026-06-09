@@ -6,6 +6,10 @@
 
 Built for PromptWars Virtual Challenge 3: "Carbon Footprint Awareness Platform".
 
+**Live demo**: https://haritnirnay-813432148799.asia-south1.run.app
+
+**Deployment**: Google Cloud Run, serving the static Vite build through Nginx.
+
 ## Core Thesis
 
 HaritNirnay is a context-aware carbon decision advisor, not a generic carbon calculator. It does not ask "what did you emit?" It asks "what are you about to choose?" By intercepting everyday choices before they happen, it provides actionable, comparative insights.
