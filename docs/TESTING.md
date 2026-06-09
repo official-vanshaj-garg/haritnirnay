@@ -1,16 +1,27 @@
-# Testing
+﻿# Testing
 
-- Planned unit tests for core engine
-- Component tests for UI
-- Accessibility tests via jest-axe
-- localStorage corruption tests
-- Future e2e test
-- Target: high coverage on domain engine
+The final submission uses automated tests to protect the decision logic, ViewModel layer, UI flow, accessibility behavior, and production build.
 
-## Implemented Domain Tests
+## Validation Command
 
-- **Score Formula**: Verification of the rule-based math and friction penalty logic.
-- **Rank Alternatives**: Ensures filtering of negative savedKg and deterministic sorting.
-- **Horizon Projector**: Verifies correct 10-year extrapolation across various frequencies (once, weekly, monthly, yearly).
-- **Analogy Mapper**: Validates correct mapping to relatable equivalents based on assumptions.
-- **Travel Calculator**: Ensures safe validation on distances, handles NaN/Infinity gracefully, and verifies output structures containing assumptions and rankings.
+```bash
+npm run validate
+```
+
+This runs formatting checks, linting, TypeScript checks, tests, and the production build.
+
+## Implemented Test Coverage
+
+- Domain tests for scoring, ranking, travel calculations, assumptions, provenance, horizon projection, and analogies.
+- ViewModel tests for recommendation presentation and Decision Receipt values.
+- UI integration tests for the travel decision flow.
+- Accessibility test using jest-axe.
+- Smoke test to confirm the app renders.
+
+## Current Final Count
+
+- 47 tests across 11 files.
+
+## Testing Philosophy
+
+The project avoids external services, browser storage, backend calls, and network dependencies so tests remain deterministic, fast, and easy to run in CI.

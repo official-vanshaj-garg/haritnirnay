@@ -1,3 +1,0 @@
-# Storage
-
-LocalStorage abstractions.

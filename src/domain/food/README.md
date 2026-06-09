@@ -1,3 +1,0 @@
-# Food
-
-Food decision logic.
