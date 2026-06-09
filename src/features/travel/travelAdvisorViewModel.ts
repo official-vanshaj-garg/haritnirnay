@@ -16,6 +16,9 @@ import { TravelFormInput } from './travelFormTypes';
 export const CARBON_ACCOUNTING_DISCLAIMER =
   'Order-of-magnitude estimates, not billable carbon accounting.';
 
+export const CARBON_CUT_TRUST_NOTE =
+  'Low confidence internal estimate; useful for comparison, not accounting.';
+
 export interface TravelFormDraft {
   distanceKm: string;
   passengers: string;
@@ -57,6 +60,19 @@ export interface CarbonReceiptViewModel {
   horizonValue: string;
   confidenceLabel: string;
   disclaimer: string;
+  carbonCut: CarbonCutViewModel;
+}
+
+export interface CarbonCutViewModel {
+  status: 'cut' | 'already_recommended';
+  summary: string;
+  currentImpactLabel: string;
+  currentImpactValue: string;
+  recommendedImpactLabel: string;
+  recommendedImpactValue: string;
+  cutLabel: string;
+  cutValue: string;
+  trustNote: string;
 }
 
 const travelModeSchema = z.enum(['petrol_car', 'bus', 'train', 'short_flight']);
@@ -159,6 +175,7 @@ export function buildCarbonReceiptViewModel(
   input: TravelFormInput,
   alternatives: {
     label: string;
+    co2eKg: number;
     savedKg: number;
     horizon: { totalSavedKg: number };
     assumptions: Assumption[];
@@ -166,13 +183,13 @@ export function buildCarbonReceiptViewModel(
 ): CarbonReceiptViewModel {
   const currentChoiceLabel = getTravelModeLabel(input.selectedMode);
   const [recommended] = alternatives;
+  const currentImpactKg = calculateTravelModeEmissions(
+    input.selectedMode,
+    input.distanceKm,
+    input.passengers
+  );
 
   if (!recommended) {
-    const currentImpactKg = calculateTravelModeEmissions(
-      input.selectedMode,
-      input.distanceKm,
-      input.passengers
-    );
     const horizon = projectImpact(currentImpactKg, 'weekly');
     const confidence = getLowestConfidence([
       getTravelModeAssumption(input.selectedMode),
@@ -187,6 +204,17 @@ export function buildCarbonReceiptViewModel(
       horizonValue: formatApproxKgCO2e(horizon.totalSavedKg),
       confidenceLabel: CONFIDENCE_LABELS[confidence],
       disclaimer: CARBON_ACCOUNTING_DISCLAIMER,
+      carbonCut: {
+        status: 'already_recommended',
+        summary: `${currentChoiceLabel} is already near the lower-impact recommendation for this trip.`,
+        currentImpactLabel: 'Current choice impact',
+        currentImpactValue: formatApproxKgCO2e(currentImpactKg),
+        recommendedImpactLabel: 'Recommended choice impact',
+        recommendedImpactValue: formatApproxKgCO2e(currentImpactKg),
+        cutLabel: 'Approximate carbon cut',
+        cutValue: 'No positive cut identified',
+        trustNote: CARBON_CUT_TRUST_NOTE,
+      },
     };
   }
 
@@ -204,5 +232,16 @@ export function buildCarbonReceiptViewModel(
     horizonValue: formatApproxKgCO2e(recommended.horizon.totalSavedKg),
     confidenceLabel: CONFIDENCE_LABELS[confidence],
     disclaimer: CARBON_ACCOUNTING_DISCLAIMER,
+    carbonCut: {
+      status: 'cut',
+      summary: `Before you choose ${currentChoiceLabel}, ${recommended.label} cuts this trip by ${formatApproxKgCO2e(recommended.savedKg)}.`,
+      currentImpactLabel: 'Current choice impact',
+      currentImpactValue: formatApproxKgCO2e(currentImpactKg),
+      recommendedImpactLabel: 'Recommended choice impact',
+      recommendedImpactValue: formatApproxKgCO2e(recommended.co2eKg),
+      cutLabel: 'Approximate carbon cut',
+      cutValue: formatApproxKgCO2e(recommended.savedKg),
+      trustNote: CARBON_CUT_TRUST_NOTE,
+    },
   };
 }

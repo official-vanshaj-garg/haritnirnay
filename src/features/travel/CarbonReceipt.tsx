@@ -35,6 +35,29 @@ export function CarbonReceipt({ receipt }: Props) {
         </div>
       </dl>
 
+      <section
+        className={`carbon-cut carbon-cut-${receipt.carbonCut.status}`}
+        aria-labelledby="carbon-cut-title"
+      >
+        <h3 id="carbon-cut-title">Carbon Cut / Decision Slice</h3>
+        <p className="carbon-cut-summary">{receipt.carbonCut.summary}</p>
+        <dl className="carbon-cut-strip">
+          <div className="carbon-cut-node carbon-cut-current">
+            <dt>{receipt.carbonCut.currentImpactLabel}</dt>
+            <dd>{receipt.carbonCut.currentImpactValue}</dd>
+          </div>
+          <div className="carbon-cut-node carbon-cut-recommended">
+            <dt>{receipt.carbonCut.recommendedImpactLabel}</dt>
+            <dd>{receipt.carbonCut.recommendedImpactValue}</dd>
+          </div>
+          <div className="carbon-cut-node carbon-cut-saving">
+            <dt>{receipt.carbonCut.cutLabel}</dt>
+            <dd>{receipt.carbonCut.cutValue}</dd>
+          </div>
+        </dl>
+        <p className="carbon-cut-trust">{receipt.carbonCut.trustNote}</p>
+      </section>
+
       <p className="receipt-disclaimer">{receipt.disclaimer}</p>
     </article>
   );

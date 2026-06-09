@@ -133,19 +133,85 @@ describe('TravelDecisionUI', () => {
       name: /Carbon receipt/i,
     });
 
-    expect(within(receipt).getByText(/Current choice/i)).toBeInTheDocument();
-    expect(within(receipt).getByText(/Petrol Car/i)).toBeInTheDocument();
+    expect(within(receipt).getByText(/^Current choice$/i)).toBeInTheDocument();
+    expect(within(receipt).getByText(/^Petrol Car$/i)).toBeInTheDocument();
     expect(
       within(receipt).getAllByText(/Recommended choice/i)[0]
     ).toBeInTheDocument();
-    expect(within(receipt).getByText(/Local Bus/i)).toBeInTheDocument();
-    expect(within(receipt).getByText(/about 1.7 kg CO2e/i)).toBeInTheDocument();
-    expect(within(receipt).getByText(/Confidence/i)).toBeInTheDocument();
-    expect(within(receipt).getByText(/Low/i)).toBeInTheDocument();
+    expect(within(receipt).getByText(/^Local Bus$/i)).toBeInTheDocument();
+    expect(
+      within(receipt).getAllByText(/about 1.7 kg CO2e/i)[0]
+    ).toBeInTheDocument();
+    expect(within(receipt).getByText(/^Confidence$/i)).toBeInTheDocument();
+    expect(within(receipt).getByText(/^Low$/i)).toBeInTheDocument();
     expect(
       within(receipt).getByText(
         /Order-of-magnitude estimates, not billable carbon accounting/i
       )
+    ).toBeInTheDocument();
+  });
+
+  it('renders the carbon cut decision slice', async () => {
+    render(<TravelDecisionPage />);
+
+    fireEvent.click(
+      screen.getByRole('button', { name: /Compare my petrol car choice/i })
+    );
+
+    const receipt = await screen.findByRole('article', {
+      name: /Carbon receipt/i,
+    });
+
+    expect(
+      within(receipt).getByRole('heading', {
+        name: /Carbon Cut \/ Decision Slice/i,
+      })
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/Current choice impact/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/Recommended choice impact/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/Approximate carbon cut/i)
+    ).toBeInTheDocument();
+    expect(within(receipt).getByText(/about 3.8 kg CO2e/i)).toBeInTheDocument();
+    expect(within(receipt).getByText(/about 2.1 kg CO2e/i)).toBeInTheDocument();
+    expect(
+      within(receipt).getAllByText(/about 1.7 kg CO2e/i)[0]
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(
+        /Low confidence internal estimate; useful for comparison, not accounting/i
+      )
+    ).toBeInTheDocument();
+  });
+
+  it('renders an honest carbon cut state when the selected mode is already recommended', async () => {
+    render(<TravelDecisionPage />);
+
+    fireEvent.change(screen.getByLabelText(/Current Mode Choice/i), {
+      target: { value: 'train' },
+    });
+    fireEvent.click(
+      screen.getByRole('button', { name: /Compare my train choice/i })
+    );
+
+    const receipt = await screen.findByRole('article', {
+      name: /Carbon receipt/i,
+    });
+
+    expect(
+      within(receipt).getByText(
+        /Train is already near the lower-impact recommendation/i
+      )
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getByText(/No positive cut identified/i)
+    ).toBeInTheDocument();
+    expect(
+      within(receipt).getAllByText(/about 0.82 kg CO2e/i)[0]
     ).toBeInTheDocument();
   });
 
