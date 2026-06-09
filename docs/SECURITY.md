@@ -1,4 +1,4 @@
-﻿# Security
+# Security
 
 HaritNirnay uses a deliberately small attack surface.
 
@@ -14,7 +14,7 @@ HaritNirnay uses a deliberately small attack surface.
 - No dangerouslySetInnerHTML.
 - Static assumptions and deterministic client-side logic.
 - Zod validation at the input boundary.
-- `npm audit --omit=dev` is expected to pass with 0 vulnerabilities.
+- `npm audit --omit=dev` currently passes with 0 vulnerabilities.
 - CodeQL security analysis runs through GitHub Actions.
 
 ## Data Handling
