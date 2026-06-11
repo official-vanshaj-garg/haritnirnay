@@ -25,7 +25,7 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div role="alert" style={{ padding: '2rem', textAlign: 'center' }}>
+        <div role="alert" className="error-boundary-fallback">
           <h2>Something went wrong</h2>
           <p>
             We encountered an unexpected issue. Please refresh the page and try

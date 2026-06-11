@@ -11,11 +11,8 @@ export function App() {
       <Header />
       <AppShell>
         <main id="main-content" tabIndex={-1}>
-          <section
-            className="thesis-section"
-            style={{ textAlign: 'center', marginBottom: 'var(--spacing-xl)' }}
-          >
-            <p style={{ color: 'var(--color-text-light)', fontSize: '1.1rem' }}>
+          <section className="thesis-section">
+            <p className="thesis-copy">
               HaritNirnay does not ask what did you emit. It asks what are you
               about to choose.
             </p>

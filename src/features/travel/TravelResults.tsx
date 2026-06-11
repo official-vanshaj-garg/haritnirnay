@@ -13,7 +13,7 @@ export function TravelResults({ result }: Props) {
     return (
       <div className="travel-results">
         <CarbonReceipt receipt={result.receipt} />
-        <div className="no-results" role="status">
+        <div role="status">
           This choice already looks like the lower-carbon practical option in
           the current Travel flow. You can still review the assumptions below.
         </div>
@@ -28,7 +28,7 @@ export function TravelResults({ result }: Props) {
 
       <h2>Ranked Alternatives</h2>
 
-      <ul className="ranked-list" aria-label="Alternative options">
+      <ul aria-label="Alternative options">
         {result.alternatives.map((alt, index) => (
           <li
             key={alt.id}

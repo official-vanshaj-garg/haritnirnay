@@ -16,26 +16,22 @@ export function TravelDecisionPage() {
   };
 
   return (
-    <div className="travel-page">
-      <div className="page-header">
+    <div>
+      <div>
         <h2>Travel Advisor</h2>
         <p>Evaluate alternatives before you book your trip.</p>
       </div>
 
       <div className="travel-layout">
-        <aside className="travel-sidebar">
+        <aside>
           <TravelDecisionForm onSubmit={handleEvaluate} />
         </aside>
 
-        <section
-          className="travel-main"
-          aria-live="polite"
-          aria-label="Travel recommendation results"
-        >
+        <section aria-live="polite" aria-label="Travel recommendation results">
           {result ? (
             <TravelResults result={result} />
           ) : (
-            <div className="empty-state">
+            <div>
               <p>
                 Fill out your upcoming travel plans to see ranked alternatives.
               </p>
